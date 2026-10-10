@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SILASYNC STUDIO | Animation Portfolio</title>
+
+    <meta
+        name="description"
+        content="Silasync Studio — 2D / 3D Animation and Web Development Portfolio."
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* ================= PROJECT MODAL ================= */
+        body.modal-open {
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .project-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .project-modal.active { display: flex; }
+
+        .project-modal-content {
+            position: relative;
+            width: min(1050px, 100%);
+            max-height: 92vh;
+            margin: 0 auto;
+            padding: 34px;
+            background: #111;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        .project-modal-content h2 { margin: 0 50px 10px 0; }
+        .project-modal-content > p { margin-bottom: 24px; color: #aaa; }
+
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            z-index: 2;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 50%;
+            background: rgba(0,0,0,.85);
+            color: #fff;
+            font-size: 30px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            width: 100%;
+            align-items: start;
+        }
+
+        .modal-video {
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* All modal videos use one consistent responsive 16:9 box */
+        .modal-video-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,.35);
+        }
+
+        .modal-video-frame iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+            background: #000;
+        }
+
+
+        /* Mobile fix: Google Drive's embedded player can render the video
+           noticeably darker on some phones. Brighten only the iframe surface. */
+        @media (max-width: 600px) {
+            .modal-video-frame iframe {
+                filter: brightness(1.35) contrast(1.05);
+            }
+
+            .modal-video-frame {
+                background: #111;
+            }
+        }
+
+        .modal-video h3 {
+            margin: 10px 0 0;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .modal-empty {
+            grid-column: 1 / -1;
+            margin: 0;
+            padding: 30px;
+            text-align: center;
+            color: #aaa;
+            border: 1px dashed rgba(255,255,255,.15);
+            border-radius: 12px;
+        }
+
+        @media (max-width: 800px) {
+            .project-modal {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .project-modal-content {
+                width: 100%;
+                max-height: 96vh;
+                padding: 28px 14px 18px;
+                border-radius: 15px;
+            }
+
+            .modal-video-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .modal-video-frame {
+                aspect-ratio: 16 / 9;
+                border-radius: 10px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .project-modal {
+                padding: 0;
+                align-items: stretch;
+            }
+
+            .project-modal-content {
+                width: 100%;
+                max-height: 100vh;
+                padding: 58px 10px 18px;
+                border: 0;
+                border-radius: 0;
+            }
+
+            .project-modal-content h2 {
+                margin-right: 45px;
+                font-size: 24px;
+            }
+
+            .project-modal-content > p {
+                font-size: 14px;
+                margin-bottom: 18px;
+            }
+
+            .modal-close {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                background: #181818;
+            }
+
+            .modal-video-grid { gap: 18px; }
+
+            .modal-video-frame {
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                border-radius: 10px;
+            }
+
+            .modal-video h3 {
+                font-size: 14px;
+                margin-top: 8px;
+            }
+        }
+    
+        /* Portfolio thumbnail: Rigging */
+        .project-image.project-4 {
+            background-image: url("https://drive.google.com/thumbnail?id=1ByGoQXjPc1BPKV1zW2xNbPu9zoAjXNgv&sz=w1200");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ================= NAVIGATION ================= -->
+
+    <header class="navbar">
+
+<a href="#home" class="logo">
+    <img
+        src="https://drive.google.com/thumbnail?id=1FWQmtD8M_z6zjqMKI4smy15twVk17prX&sz=w500"
+        alt="Silasync Studio Logo">
+    <span>SSS.</span>
+</a>
+
+        <nav class="nav-links" id="navLinks">
+            <a href="#home">Home</a>
+            <a href="#reels">Reels</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <button class="menu-button" id="menuButton" aria-label="Open menu">
+            ☰
+        </button>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <main>
+
+        <section class="hero" id="home">
+
+            <div class="hero-background"></div>
+
+            <div class="hero-content">
+
+                <p class="eyebrow">
+                    2D / 3D ANIMATION • DIGITAL ART • WEB DEVELOPMENT
+                </p>
+
+                <h1>
+                    Bringing ideas
+                    <span>to life.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Hi, we are <strong>Silasync studio</strong>.
+                    we are an animation-focused creator interested in
+                    2D animation, 3D animation, modeling, rigging,
+                    digital storytelling and web development 
+                </p>
+
+                <div class="hero-buttons">
+
+                    <a href="#reels" class="button primary">
+                        Watch My Reels
+                    </a>
+
+                    <a href="#portfolio" class="button secondary">
+                        View Portfolio
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="scroll-indicator">
+                <span></span>
+                SCROLL
+            </div>
+
+        </section>
+
+<div class="reel-grid">
+    <article class="reel-card">
+
+        <div class="reel-video-container">
+            <iframe
+                src="https://drive.google.com/file/d/1rXHQGnTfdgx0vGLfS9v6Yf-ThRRJDICr/preview"
+                allow="autoplay"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <div class="reel-info">
+            <h3>Studio logo intro</h3>
+        </div>
+
+    </article>
+</div>
+
+
+        <!-- ================= SHOWREELS ================= -->
+
+        <section class="section reels-section" id="reels">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">SHOWREEL</p>
+
+                <h2>
+                    My <span>Reels</span>
+                </h2>
+
+                <p>
+                    A collection of animation and creative work.
+                </p>
+
+            </div>
+
+
+            <div class="reel-grid">
+
+                <!-- REEL 1 -->
+
+                <article class="reel-card">
+
+                    <div class="video-container">
+
+                      <iframe
+            src="https://drive.google.com/file/d/18V2AwGH9ViyCNeizeqoBQQgo97H3xbGo/preview"
+            allow="autoplay"
+            allowfullscreen>
+        </iframe>
+
+                    </div>
+
+                    <div class="reel-info">
+
+                        <div>
+                            <p class="project-number">01</p>
+
+                            <h3>
+                                Main Showreel
+                            </h3>
+
+                            <p>
+                                Animation • 3D • Motion
+                            </p>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PORTFOLIO ================= -->
+
+        <section class="section portfolio-section" id="portfolio">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">SELECTED WORK</p>
+
+                <h2>
+                    My <span>Portfolio and Works
+                    /Commissions</span>
+                </h2>
+
+                <p>
+                    Some of my favorite creative projects.
+                </p>
+
+            </div>
+
+
+            <div class="portfolio-grid">
+
+                <!-- PROJECT 1 -->
+
+                <article
+                    class="project-card"
+                    data-category="3d"
+                >
+
+                    <div class="project-image project-1">
+
+                        <div class="project-overlay">
+
+                            <span>3D ANIMATION</span>
+
+                            <button
+                                class="view-project"
+                                data-title="3D Character Animation"
+                                data-description="A 3D character animation project."
+                                data-videos=""
+                            >
+                                View Project
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <span>01 / 3D</span>
+
+                        <h3>
+                            Character Animation
+                        </h3>
+
+                        <p>
+                            Character animation and movement study.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PROJECT 2 -->
+
+                <article
+                    class="project-card"
+                    data-category="2d"
+                >
+
+                    <div class="project-image project-2">
+
+                        <div class="project-overlay">
+
+                            <span>2D ANIMATION</span>
+
+                            <button
+                                class="view-project"
+                                data-title="2D Animation"
+                                data-description="A 2D animation project exploring movement and storytelling."
+                                data-videos=""
+                            >
+                                View Project
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <span>02 / 2D</span>
+
+                        <h3>
+                            2D Animation
+                        </h3>
+
+                        <p>
+                            Traditional and digital animation work.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PROJECT 3 -->
+
+                <article
+                    class="project-card"
+                    data-category="3d"
+                >
+
+                    <div class="project-image project-3">
+
+                        <div class="project-overlay">
+
+                            <span>3D MODELING</span>
+
+                            <button
+                                class="view-project"
+                                data-title="3D Modeling"
+                                data-description="A 3D modeling project."
+                                data-videos=""
+                            >
+                                View Project
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <span>03 / 3D</span>
+
+                        <h3>
+                            3D Modeling
+                        </h3>
+
+                        <p>
+                            Modeling, materials and presentation.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PROJECT 4 -->
+
+                <article
+                    class="project-card"
+                    data-category="rigging"
+                >
+
+                  <div class="project-image project-4">
+
+    <div class="project-overlay">
+        <span>RIGGING</span>
+        
+
+        <button
+            class="view-project"
+            data-title="Character Rigging"
+            data-description="Character rigging and setup projects."
+            data-videos="15LKoUI_1Kao2JouZ6MXs8C9cWAiCSA_i,1iHH5VeZpnV0Dpw-lMHYydGr2SEmdkjgH">
+            View Project
+        </button>
+        
+    </div>
+
+</div>
+
+<div class="project-details">
+
+    <span>04 / RIGGING</span>
+
+    <h3>Character Rigging</h3>
+
+    <p>Character controls and animation setup.</p>
+
+</div>
+
+
+
+
+                </article>
+
+
+                <!-- PROJECT 5 -->
+
+                <article
+                    class="project-card"
+                    data-category="art"
+                >
+
+                    <div class="project-image project-5">
+
+                        <div class="project-overlay">
+
+                            <span>DIGITAL ART</span>
+
+                            <button
+                                class="view-project"
+                                data-title="Digital Artwork"
+                                data-description="Digital artwork and visual design."
+                                data-videos=""
+                            >
+                                View Project
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <span>05 / ART</span>
+
+                        <h3>
+                            Digital Artwork
+                        </h3>
+
+                        <p>
+                            Illustration and digital artwork.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PROJECT 6 -->
+
+                <article
+                    class="project-card"
+                    data-category="motion"
+                >
+
+                    <div class="project-image project-6">
+
+                        <div class="project-overlay">
+
+                            <span>WEB DEVELOPMENT</span>
+
+                            <button
+                                class="view-project"
+                                data-title="WEB DEVELOPMENT"
+                                data-description="Website development and digital projects."
+                                data-videos=""
+                            >
+                                View Project
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="project-details">
+
+                        <span>06 / WEB DEVELOPMENT</span>
+
+                        <h3>
+                            WEB DEVELOPMENT
+                        </h3>
+
+                        <p>
+                            Motion graphics and visual effects.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SKILLS ================= -->
+
+        <section class="section skills-section">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">WHAT WE DO</p>
+
+                <h2>
+                    Skills & <span>Tools</span>
+                </h2>
+
+            </div>
+
+
+            <div class="skills-grid">
+
+                <div class="skill">
+
+                    <span class="skill-number">01</span>
+
+                    <h3>
+                        3D Animation
+                    </h3>
+
+                    <p>
+                        Character movement, timing,
+                        acting and animation principles.
+                    </p>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <span class="skill-number">02</span>
+
+                    <h3>
+                        2D Animation
+                    </h3>
+
+                    <p>
+                        Digital animation, storyboarding,
+                        movement and visual storytelling.
+                    </p>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <span class="skill-number">03</span>
+
+                    <h3>
+                        3D Modeling
+                    </h3>
+
+                    <p>
+                        Creating characters, objects
+                        and environments.
+                    </p>
+
+                </div>
+
+
+                <div class="skill">
+
+                    <span class="skill-number">04</span>
+
+                    <h3>
+                        Rigging
+                    </h3>
+
+                    <p>
+                        Character rigs, controls
+                        and animation-ready models.
+                    </p>
+
+                </div>
+
+                  <div class="skill">
+
+                    <span class="skill-number">05</span>
+
+                    <h3>
+                        Web development
+                    </h3>
+
+                    <p>
+                        Website for your products
+                        or organizations.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="tools">
+
+                <span>BLENDER</span>
+                <span>AUTODESK MAYA</span>
+                <span>CLIP STUDIO PAINT</span>
+                <span>DAVINCI RESOLVE</span>
+                <span>VISUAL CODE STUDIO</span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ABOUT ================= -->
+
+        <section class="section about-section" id="about">
+
+            <div class="about-grid">
+
+                <div>
+
+                    <p class="eyebrow">
+                        ABOUT US
+                    </p>
+
+                    <h2>
+                        Creating worlds,
+                        <span>one frame at a time.</span>
+                    </h2>
+
+                </div>
+
+
+                <div class="about-text">
+
+                    <p>
+                        We are SILASYNC STUDIO, an animation-focused
+                        student and creative artist interested in
+                        bringing ideas to life through animation
+                        and digital art.
+                    </p>
+
+                    <p>
+                        Our interests include 2D animation,
+                        3D animation, modeling, rigging,
+                        motion design and visual storytelling.
+                    </p>
+
+                    <p>
+                        We continuously learning new techniques
+                        and developing my skills through personal
+                        projects and creative experiments.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CONTACT ================= -->
+
+        <section class="section contact-section" id="contact">
+
+            <div class="contact-content">
+
+                <p class="eyebrow">
+                    HAVE A PROJECT?
+                </p>
+
+                <h2>
+                    Let's create something
+                    <span>amazing.</span>
+                </h2>
+
+                <p>
+                    Feel free to contact me for collaborations,
+                    projects, internships or creative opportunities.
+                </p>
+
+                <div class="contact-buttons">
+
+                    <a
+                        href="mailto:YOUR_EMAIL@example.com"
+                        class="button primary"
+                    >
+                        Email Me
+                    </a>
+<a
+    href="https://www.facebook.com/dolorito.slr/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="button secondary"
+>
+    Facebook
+</a>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= RIGGING PROJECT MODAL ================= -->
+
+    <div
+        class="project-modal"
+        id="projectModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="project-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modalTitle"
+        >
+
+            <button
+                class="modal-close"
+                id="modalClose"
+                type="button"
+                aria-label="Close project"
+            >
+                &times;
+            </button>
+
+            <p class="eyebrow">PROJECT</p>
+
+            <h2 id="modalTitle">Character Rigging</h2>
+
+            <p id="modalDescription">
+                Character rigging and setup projects.
+            </p>
+
+            <div
+                class="modal-video-grid"
+                id="modalVideoGrid"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-logo">
+            SD<span>.</span>
+        </div>
+
+        <p>
+            © <span id="year"></span>
+            Sylvester Dolorito. All rights reserved.
+        </p>
+
+        <a href="#home">
+            Back to top ↑
+        </a>
+
+    </footer>
+
+
+    <script>
+        /* ================= RIGGING PROJECT MODAL ================= */
+
+        const projectModal = document.getElementById("projectModal");
+        const modalClose = document.getElementById("modalClose");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalDescription = document.getElementById("modalDescription");
+        const modalVideoGrid = document.getElementById("modalVideoGrid");
+
+        function openProjectModal(button) {
+            const title = button.dataset.title || "Project";
+            const description = button.dataset.description || "";
+            const videoIds = (button.dataset.videos || "")
+                .split(",")
+                .map(id => id.trim())
+                .filter(Boolean);
+
+            modalTitle.textContent = title;
+            modalDescription.textContent = description;
+            modalVideoGrid.innerHTML = "";
+
+            if (videoIds.length === 0) {
+                const emptyMessage = document.createElement("p");
+                emptyMessage.className = "modal-empty";
+                emptyMessage.textContent =
+                    "Project media will be added here soon.";
+                modalVideoGrid.appendChild(emptyMessage);
+            } else {
+                videoIds.forEach((videoId, index) => {
+                    const video = document.createElement("article");
+                    video.className = "modal-video";
+
+                    video.innerHTML = `
+                        <div class="modal-video-frame">
+                            <iframe
+                                src="https://drive.google.com/file/d/${videoId}/preview"
+                                title="${title} - Video ${index + 1}"
+                                allow="autoplay"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        <h3>${title} — Video ${index + 1}</h3>
+                    `;
+
+                    modalVideoGrid.appendChild(video);
+                });
+            }
+
+            projectModal.classList.add("active");
+            projectModal.setAttribute("aria-hidden", "false");
+
+            /* Lock the page behind the modal, but allow the modal itself to scroll. */
+            document.body.classList.add("modal-open");
+        }
+
+        function closeProjectModal() {
+            projectModal.classList.remove("active");
+            projectModal.setAttribute("aria-hidden", "true");
+
+            /* Restore normal page scrolling. */
+            document.body.classList.remove("modal-open");
+
+            /* Stop Drive videos when the modal closes. */
+            modalVideoGrid.innerHTML = "";
+        }
+
+        document.querySelectorAll(".view-project").forEach(button => {
+            button.addEventListener("click", function () {
+                openProjectModal(this);
+            });
+        });
+
+        modalClose.addEventListener("click", closeProjectModal);
+
+        projectModal.addEventListener("click", function (event) {
+            if (event.target === projectModal) {
+                closeProjectModal();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (
+                event.key === "Escape" &&
+                projectModal.classList.contains("active")
+            ) {
+                closeProjectModal();
+            }
+        });
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
